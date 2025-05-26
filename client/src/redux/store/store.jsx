@@ -1,0 +1,15 @@
+import { configureStore } from "@reduxjs/toolkit";
+import Auth_slice from "../slice/Auth_slice";
+import workspaceSlice from "../slice/Workspace.slice";
+import leadSlice from "../slice/Lead.slice";
+import dropdownSlice from "../slice/dropdownSlice";
+import teamSlice from "../slice/TeamSlice";
+export const Store = configureStore({
+  reducer: {
+    auth: Auth_slice,
+    workspace: workspaceSlice,
+    dropdown: dropdownSlice,
+    lead: leadSlice,
+    team: teamSlice,
+  },
+});
