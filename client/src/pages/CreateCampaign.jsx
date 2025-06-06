@@ -12,6 +12,14 @@ const CreateCampaign = () => {
   const dispatch = useDispatch();
   const workspaceId = localStorage.getItem("workspace_id");
   const [selectedLead, setSelectedLead] = useState(null);
+  const [selectedRows, setSelectedRows] = useState({}); // { [id]: true/false }
+
+  const handleCheckboxChange = (id, checked) => {
+    setSelectedRows((prev) => ({
+      ...prev,
+      [id]: checked,
+    }));
+  };
 
   const {leads} = useSelector((state) => state.lead);
   console.log("leads", leads);
@@ -24,6 +32,23 @@ const CreateCampaign = () => {
 
   const columns = useMemo(
     () => [
+      {
+        field: "checkbox",
+        headerName: "",
+        width: 50,
+        renderCell: (params) => (
+          <input
+            type='checkbox'
+            checked={params.row.isSelected || false}
+            onChange={(e) =>
+              handleCheckboxChange(params.row.id, e.target.checked)
+            }
+            className='cursor-pointer'
+          />
+        ),
+        sortable: false,
+        filterable: false,
+      },
       {
         field: "sno",
         headerName: "S.No",
@@ -95,11 +120,11 @@ const CreateCampaign = () => {
     return leads?.map((lead, index) => ({
       id: lead.id,
       sno: index + 1,
-      name: lead.name,
-      phone: lead.phone,
+      name: lead.name || "-",
+      phone: lead.phone || "-",
       inhouse_division: lead.inhouse_division || "N/A",
-      assignee: lead.creator,
-      createdAt: lead.createdAt,
+      assignee: lead.creator || "-",
+      createdAt: lead.createdAt || "-",
     }));
   }, [leads]);
 
