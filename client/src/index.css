@@ -11,3 +11,20 @@ body {
   background: #121212;
   letter-spacing: 0.01cm;
 }
+
+@layer utilities {
+  .animate-slide-in {
+    transform: translateX(100%);
+    animation: slide-in 0.5s ease-in-out forwards;
+  }
+
+  @keyframes slide-in {
+    to {
+      transform: translateX(0%);
+    }
+  }
+}
+
+overflow-y-auto {
+  scroll-behavior: smooth;
+}

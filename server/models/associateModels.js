@@ -16,6 +16,18 @@ const associateModels = () => {
     otherKey: "campaign_id",
   });
 
+  Users.hasMany(Lead, {
+    foreignKey: "createdBy",
+    sourceKey: "user_id",
+    as: "leads",
+  });
+
+  Lead.belongsTo(Users, {
+    foreignKey: "createdBy",
+    targetKey: "user_id",
+    as: "creator",
+  });
+
   Campaign.belongsToMany(Lead, {
     through: LeadCampaignMap,
     foreignKey: "campaign_id",

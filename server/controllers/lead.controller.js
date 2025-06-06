@@ -6,6 +6,7 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const Attachment = require("../models/attachment.model");
 const {Sequelize, Op} = require("sequelize");
+const Users = require("../models/users.model");
 
 const createLead = async (req, res) => {
   try {
@@ -58,7 +59,7 @@ const bulkcreateFromCsv = async (req, res) => {
             .status(500)
             .json({message: "Database error", error: dbError.message});
         } finally {
-          fs.unlinkSync(filePath); 
+          fs.unlinkSync(filePath);
         }
       });
   } catch (error) {
@@ -89,6 +90,13 @@ const getAllLeadByWorkspaceId = async (req, res) => {
     const leads = await Lead.findAll({
       where: {workspace_id: workspaceId},
       order: [["createdAt", "DESC"]],
+      include: [
+        {
+          model: Users,
+          as: "creator",
+          attributes: ["user_id", "name", "email"], // select only the fields you need
+        },
+      ],
     });
 
     return res.json(createSuccess("Leads retrieved successfully", leads));

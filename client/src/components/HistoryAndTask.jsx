@@ -32,6 +32,27 @@ const HistoryAndTask = () => {
       name: "Karan Verma",
       note: "Follow-up regarding demo session",
     },
+    {
+      id: 1,
+      call_type: "Incoming",
+      time: "2025-06-05 14:32",
+      name: "Akshay Mishra",
+      note: "Asked about service pricing",
+    },
+    {
+      id: 2,
+      call_type: "Missed",
+      time: "2025-06-05 11:10",
+      name: "Riya Sharma",
+      note: "No response, voicemail left",
+    },
+    {
+      id: 3,
+      call_type: "Outgoing",
+      time: "2025-06-04 17:45",
+      name: "Karan Verma",
+      note: "Follow-up regarding demo session",
+    },
   ];
 
   return (
