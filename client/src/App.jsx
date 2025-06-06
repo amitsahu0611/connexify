@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+
 
 import Dashboard from "./pages/Dashboard";
 import Add_singleLads from "./pages/Add_singleLads";
@@ -23,6 +23,8 @@ import Teams from "./pages/Teams";
 import CreateCampaign from "./pages/CreateCampaign";
 import AllCampaigns from "./pages/AllCampaigns";
 import TeamProfile from "./pages/TeamProfile";
+
+import LeadManagementPage from "./pages/LeadManagementPage";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("userData"));
@@ -47,6 +49,7 @@ function App() {
           <Route path='leads' element={<Add_singleLads />} />
           <Route path='leads/add' element={<BulkLeads />} />
           <Route path='teams' element={<Teams />} />
+          <Route path='search' element={<LeadManagementPage />} />
           <Route path='teams/profile/:user_id' element={<TeamProfile />} />
           <Route path='campaign/createCampaign' element={<CreateCampaign />} />
           <Route path='campaign/allCampaigns' element={<AllCampaigns />} />
