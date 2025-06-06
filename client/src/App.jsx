@@ -1,3 +1,5 @@
+/** @format */
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -18,6 +20,9 @@ import UserProfile from "./components/UserProfile";
 import SelectWorkspace from "./pages/SelectWorkspace";
 import ManageWorkspace from "./pages/ManageWorkspace";
 import Teams from "./pages/Teams";
+import CreateCampaign from "./pages/CreateCampaign";
+import AllCampaigns from "./pages/AllCampaigns";
+import TeamProfile from "./pages/TeamProfile";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("userData"));
@@ -25,29 +30,33 @@ function App() {
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
+        <Route path='/login' element={<Login />} />
 
-        <Route path="/workspace" element={<SelectWorkspace />} />
+        <Route path='/workspace' element={<SelectWorkspace />} />
 
         {/* Protected Routes */}
         <Route
-          path="/"
+          path='/'
           element={
             <ProtectedRoute>
               <MainLayout />
             </ProtectedRoute>
           }
         >
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="leads" element={<Add_singleLads />} />
-          <Route path="leads/add" element={<BulkLeads />} />
-          <Route path="teams" element={<Teams />} />
+          <Route path='dashboard' element={<Dashboard />} />
+          <Route path='leads' element={<Add_singleLads />} />
+          <Route path='leads/add' element={<BulkLeads />} />
+          <Route path='teams' element={<Teams />} />
+          <Route path='teams/profile/:user_id' element={<TeamProfile />} />
+          <Route path='campaign/createCampaign' element={<CreateCampaign />} />
+          <Route path='campaign/allCampaigns' element={<AllCampaigns />} />
 
-          <Route path="/profile" element={<UserProfile />} />
+          <Route path='/profile' element={<UserProfile />} />
+
           {user?.role_id === 0 && (
-            <Route path="/manage-workspace" element={<ManageWorkspace />} />
+            <Route path='/manage-workspace' element={<ManageWorkspace />} />
           )}
-          <Route index element={<Navigate to="/dashboard" />} />
+          <Route index element={<Navigate to='/dashboard' />} />
         </Route>
 
         {/* Catch-all for unknown routes */}

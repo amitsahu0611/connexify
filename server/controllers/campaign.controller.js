@@ -63,7 +63,7 @@ const getAllCampaigns = async (req, res) => {
           include: {
             model: Users,
             as: "user",
-            attributes: ["id", "name", "email"], // Customize as needed
+            attributes: ["user_id", "name", "email"], // Customize as needed
           },
         },
       ],

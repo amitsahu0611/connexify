@@ -1,7 +1,9 @@
+/** @format */
+
 // src/redux/slices/dropdownSlice.js
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
-import { API_URL, showToast } from "../../utils/config";
+import {API_URL, showToast} from "../../utils/config";
 
 const initialState = {
   divisions: [],
@@ -52,7 +54,9 @@ export const getAllCategories = createAsyncThunk(
   "dropdown/getCategories",
   async (workspaceId, thunkAPI) => {
     try {
-      const res = await axios.get(`${API_URL}serviceCategory/getAllCategories/${workspaceId}`);
+      const res = await axios.get(
+        `${API_URL}serviceCategory/getAllCategories/${workspaceId}`
+      );
 
       return res.data.data;
     } catch (error) {

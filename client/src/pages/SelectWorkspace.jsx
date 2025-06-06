@@ -1,15 +1,19 @@
+/** @format */
 
-
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllWorkspaces } from "../redux/slice/Workspace.slice";
-import { useNavigate } from "react-router-dom";
+import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {getAllWorkspaces} from "../redux/slice/Workspace.slice";
+import {useNavigate} from "react-router-dom";
+import {LogOut} from "lucide-react";
 
 const SelectWorkspace = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {workspaces, loading} = useSelector((state) => state.workspace);
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  console.log("userData", userData);
 
-  const { workspaces, loading } = useSelector((state) => state.workspace);
+  const userEmail = userData?.email; // Replace with dynamic email if available
 
   useEffect(() => {
     dispatch(getAllWorkspaces());
@@ -21,39 +25,51 @@ const SelectWorkspace = () => {
     navigate("/dashboard");
   };
 
-  if (loading)
-    return (
-      <div className="text-center mt-10 text-lg">Loading workspaces...</div>
-    );
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="max-w-4xl w-full">
-        <h1 className="text-2xl font-bold mb-6 text-center">
-          Select a Workspace
+    <div className='min-h-screen bg-gray-100 px-6 py-8'>
+      {/* Header Section */}
+      <header className='flex justify-end mb-6'>
+        <div className='flex items-center space-x-4'>
+          <span className='font-semibold text-gray-800'>{userEmail}</span>
+          <button
+            onClick={handleLogout}
+            className='px-5 py-3 bg-indigo-500 text-white font-semi hover:text-black rounded-md text-sm flex items-center'
+          >
+            <LogOut className='w-4 h-4 mr-1' />
+            Logout
+          </button>
+        </div>
+      </header>
+
+      {/* Main Section */}
+      <main className='bg-white p-6 rounded-lg shadow-md mx-auto'>
+        <h1 className='text-xl text-indigo-500 underline font-semibold mb-4'>
+          Existing Workspaces ({workspaces?.length || 0})
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {Array.isArray(workspaces) && workspaces.length > 0 ? (
+
+        <ul className='list-none p-0'>
+          {loading ? (
+            <li className='text-gray-500'>Loading workspaces...</li>
+          ) : Array.isArray(workspaces) && workspaces.length > 0 ? (
             workspaces.map((ws) => (
-              <div
+              <li
                 key={ws.workspace_id}
-                className="bg-white p-6 rounded-2xl shadow hover:shadow-md transition cursor-pointer border border-gray-200"
                 onClick={() => handleSelect(ws)}
+                className='py-3 uppercase font-bold text-indigo-500 hover:underline px-2 border-b border-gray-200 hover:bg-gray-50 cursor-pointer'
               >
-                <h2 className="text-xl font-semibold">{ws.workspace_name}</h2>
-                <p className="text-sm text-gray-600 mt-1">{ws.description}</p>
-                <p className="mt-2 text-xs text-gray-500">
-                  Created: {new Date(ws.createdAt).toLocaleDateString()}
-                </p>
-              </div>
+                {ws.workspace_name}
+              </li>
             ))
           ) : (
-            <div className="text-center text-gray-500 col-span-2">
-              No workspaces found.
-            </div>
+            <li className='text-gray-400'>No workspaces found.</li>
           )}
-        </div>
-      </div>
+        </ul>
+      </main>
     </div>
   );
 };

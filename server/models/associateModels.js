@@ -7,6 +7,7 @@ const Lead = require("./lead.model");
 const LeadCampaignMap = require("./LeadCampaignMap.model");
 const CampaignAssignee = require("./CampaignAssignee.model");
 const Users = require("./users.model");
+const CallHistory = require("./CallHistory.model");
 
 const associateModels = () => {
   Lead.belongsToMany(Campaign, {
@@ -40,6 +41,15 @@ const associateModels = () => {
     foreignKey: "user_id",
     as: "user",
   });
+
+  Lead.hasMany(CallHistory, {foreignKey: "lead_id", as: "callLogs"});
+  CallHistory.belongsTo(Lead, {foreignKey: "lead_id", as: "lead"});
+
+  Campaign.hasMany(CallHistory, {foreignKey: "campaign_id", as: "callLogs"});
+  CallHistory.belongsTo(Campaign, {foreignKey: "campaign_id", as: "campaign"});
+
+  Users.hasMany(CallHistory, {foreignKey: "user_id", as: "userCalls"});
+  CallHistory.belongsTo(Users, {foreignKey: "user_id", as: "caller"});
 };
 
 module.exports = associateModels;

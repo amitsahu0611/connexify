@@ -3,50 +3,41 @@
 const {DataTypes} = require("sequelize");
 const sequelize = require("../connection/db_connection");
 
-const Users = sequelize.define(
-  "Users",
+const CallHistory = sequelize.define(
+  "CallHistory",
   {
-    user_id: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    workspace_id: {
+    lead_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    initials: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    role_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    reporting_to: {
+    campaign_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    phone: {
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    call_time: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    status: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+    start_time: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    notes: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     is_deleted: {
       type: DataTypes.BOOLEAN,
@@ -54,17 +45,17 @@ const Users = sequelize.define(
     },
   },
   {
-    tableName: "users",
+    tableName: "call_history",
     timestamps: true,
   }
 );
 
-module.exports = Users;
+module.exports = CallHistory;
 
 // (async () => {
 //   try {
-//     await Users.sync({alter: true}); // Use alter to update table if it already exists
-//     console.log("Users table synced successfully.");
+//     await CallHistory.sync({alter: true}); // Use alter to update table if it already exists
+//     console.log("CallHistory table synced successfully.");
 //   } catch (error) {
 //     console.error("Error syncing Users table:", error);
 //   } finally {

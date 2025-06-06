@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { createLead } from "../redux/slice/Lead.slice";
+/** @format */
+
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {createLead} from "../redux/slice/Lead.slice";
 import TopLoader from "../components/TopLoader";
 import {
   getDivisionsByWorkspace,
@@ -42,8 +44,8 @@ const labelMap = {
 
 export default function Add_singleLads() {
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.lead);
-  const { divisions, sources, categories } = useSelector(
+  const {loading} = useSelector((state) => state.lead);
+  const {divisions, sources, categories} = useSelector(
     (state) => state.dropdown
   );
 
@@ -51,8 +53,8 @@ export default function Add_singleLads() {
   const [errors, setErrors] = useState({});
   const [search, setSearch] = useState("");
   const [user, setUser] = useState(null);
- 
- const workspace_id = localStorage.getItem("workspace_id");
+
+  const workspace_id = localStorage.getItem("workspace_id");
   useEffect(() => {
     const userData = localStorage.getItem("userData");
     if (userData) {
@@ -67,7 +69,7 @@ export default function Add_singleLads() {
 
   useEffect(() => {
     if (user) {
-      const { user_id, } = user;
+      const {user_id} = user;
       setFormData((prev) => ({
         ...prev,
         createdBy: user_id,
@@ -76,7 +78,7 @@ export default function Add_singleLads() {
 
       dispatch(getDivisionsByWorkspace(workspace_id));
       dispatch(getSourcesByWorkspace(workspace_id));
-      dispatch(getAllCategories(workspace_id))
+      dispatch(getAllCategories(workspace_id));
     }
   }, [user, dispatch]);
 
@@ -111,9 +113,9 @@ export default function Add_singleLads() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
+    const {name, value} = e.target;
+    setFormData((prev) => ({...prev, [name]: value}));
+    setErrors((prev) => ({...prev, [name]: ""}));
   };
 
   const handleSubmit = (e) => {
@@ -123,7 +125,7 @@ export default function Add_singleLads() {
     dispatch(createLead(formData))
       .unwrap()
       .then(() => {
-        setFormData(initialData); 
+        setFormData(initialData);
       })
       .catch(() => {});
   };
@@ -142,44 +144,28 @@ export default function Add_singleLads() {
   return (
     <>
       {loading && <TopLoader loading={loading} />}
-      <div className="h-screen bg-gray-100">
-        <div className="bg-white shadow">
-          <div className="px-4 sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-            <div className="py-3 md:flex md:items-center md:justify-between">
-              <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
-                Add New Lead
-              </h2>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-5xl mx-auto p-8 mt-5">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className='h-screen bg-gray-100'>
+        <div className=' mx-auto p-8 mt-5 bg-white'>
+          <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4'>
             <input
-              type="text"
+              type='text'
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="🔍 Search lead fields (e.g. email, phone)"
-              className="w-full md:w-1/2 border border-navy-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-500 text-sm"
+              placeholder='🔍 Search lead fields (e.g. email, phone)'
+              className='w-full md:w-1/2 border border-navy-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-navy-500 text-sm'
             />
-            <a
-              href="#"
-              className="text-sm text-blue-400 hover:underline font-medium"
-            >
-              📂 Previously uploaded leads
-            </a>
           </div>
 
           <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className='grid grid-cols-1 md:grid-cols-2 gap-6'
           >
             {filteredFields.map((field) => (
               <div key={field}>
-                <label className="block text-sm font-semibold text-navy-700 mb-1">
+                <label className='block text-sm text-navy-700 mb-1'>
                   {labelMap[field]}
                   {requiredFields.includes(field) && (
-                    <span className="text-red-500 ml-1">*</span>
+                    <span className='text-red-500 ml-1'>*</span>
                   )}
                 </label>
 
@@ -192,7 +178,7 @@ export default function Add_singleLads() {
                     onChange={handleChange}
                     className={inputClass(field)}
                   >
-                    <option value="">Select</option>
+                    <option value=''>Select</option>
                     {field === "source" &&
                       Array.isArray(sources) &&
                       sources.map((v, index) => (
@@ -216,14 +202,14 @@ export default function Add_singleLads() {
                       ))}
                   </select>
                 ) : field.includes("phone") ? (
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">🇮🇳</span>
+                  <div className='flex items-center gap-2'>
+                    <span className='text-lg'>🇮🇳</span>
                     <input
                       name={field}
                       value={formData[field]}
                       onChange={handleChange}
                       className={`${inputClass(field)} border-yellow-500`}
-                      placeholder="Enter phone number"
+                      placeholder='Enter phone number'
                     />
                   </div>
                 ) : (
@@ -237,14 +223,14 @@ export default function Add_singleLads() {
                 )}
 
                 {errors[field] && (
-                  <p className="text-sm text-red-500 mt-1">{errors[field]}</p>
+                  <p className='text-sm text-red-500 mt-1'>{errors[field]}</p>
                 )}
               </div>
             ))}
 
-            <div className="md:col-span-2 pt-6 flex justify-end">
+            <div className='md:col-span-2 pt-6 flex justify-end'>
               <button
-                type="submit"
+                type='submit'
                 disabled={loading}
                 className={`${
                   loading
@@ -252,7 +238,7 @@ export default function Add_singleLads() {
                     : "bg-[#1E75D3] hover:bg-blue-700"
                 } text-white font-semibold py-2 px-6 rounded-md transition-all`}
               >
-                {loading ? "Submitting..." : "👥 Add Lead"}
+                {loading ? "Submitting..." : " Add Lead"}
               </button>
             </div>
           </form>

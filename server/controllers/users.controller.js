@@ -28,6 +28,7 @@ const register = async (req, res) => {
       role_id,
       workspace_id,
       phone,
+      reporting_to: reporting_to ? reporting_to : null,
     });
 
     const subject = "Welcome to Nowgray – Your Account is Ready!";
@@ -137,10 +138,19 @@ const getAllUsers = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
+  console.log("came");
   try {
     const {user_id} = req.params;
-    const {name, initials, email, password, role_id, phone, workspace_id} =
-      req.body;
+    const {
+      name,
+      initials,
+      email,
+      password,
+      role_id,
+      phone,
+      workspace_id,
+      reporting_to,
+    } = req.body;
 
     const user = await Users.findOne({where: {user_id}});
     if (!user) return res.status(404).json({message: "User not found"});
@@ -161,6 +171,7 @@ const updateUser = async (req, res) => {
         role_id,
         workspace_id,
         phone,
+        reporting_to: reporting_to ? reporting_to : null,
       },
       {where: {user_id}}
     );
@@ -201,6 +212,26 @@ const exportAllUsers = async (req, res) => {
   }
 };
 
+const getAllManager = async (req, res) => {
+  try {
+    const {workspace_id} = req.params;
+
+    const managers = await Users.findAll({
+      where: {
+        is_deleted: false,
+        role_id: 2,
+        workspace_id,
+      },
+      order: [["user_id", "DESC"]],
+    });
+
+    res.json(createSuccess("Managers retrieved successfully", managers));
+  } catch (error) {
+    console.error("Get all managers error:", error);
+    res.status(500).json({message: "Server error"});
+  }
+};
+
 module.exports = {
   login,
   getUserById,
@@ -208,4 +239,5 @@ module.exports = {
   getAllUsers,
   updateUser,
   exportAllUsers,
+  getAllManager,
 };
