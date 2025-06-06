@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import Login from "./pages/Login";
 
-
 import Dashboard from "./pages/Dashboard";
 import Add_singleLads from "./pages/Add_singleLads";
 
@@ -45,12 +44,12 @@ function App() {
             </ProtectedRoute>
           }
         >
+          <Route path='teams/profile/:user_id' element={<TeamProfile />} />
           <Route path='dashboard' element={<Dashboard />} />
           <Route path='leads' element={<Add_singleLads />} />
           <Route path='leads/add' element={<BulkLeads />} />
           <Route path='teams' element={<Teams />} />
           <Route path='search' element={<LeadManagementPage />} />
-          <Route path='teams/profile/:user_id' element={<TeamProfile />} />
           <Route path='campaign/createCampaign' element={<CreateCampaign />} />
           <Route path='campaign/allCampaigns' element={<AllCampaigns />} />
 

@@ -1,185 +1,31 @@
 /** @format */
 
-// /** @format */
-
-// import {useEffect, useMemo, useState} from "react";
-// import {useDispatch, useSelector} from "react-redux";
-// import {getLeadsByWorkspace} from "../redux/slice/Lead.slice";
-// import DataTable from "../components/Datagrid";
-// import moment from "moment/moment";
-// import TeamProfile from "./TeamProfile";
-// import {X} from "lucide-react";
-
-// const CreateCampaign = () => {
-//   const dispatch = useDispatch();
-//   const workspaceId = localStorage.getItem("workspace_id");
-//   const [selectedLead, setSelectedLead] = useState(null);
-//   const [selectedRows, setSelectedRows] = useState({}); // { [id]: true/false }
-
-//   const handleCheckboxChange = (id, checked) => {
-//     setSelectedRows((prev) => ({
-//       ...prev,
-//       [id]: checked,
-//     }));
-//   };
-
-//   const {leads} = useSelector((state) => state.lead);
-//   console.log("leads", leads);
-
-//   useEffect(() => {
-//     if (workspaceId) {
-//       dispatch(getLeadsByWorkspace(workspaceId));
-//     }
-//   }, [workspaceId]);
-
-//   const columns = useMemo(
-//     () => [
-//       {
-//         field: "checkbox",
-//         headerName: "",
-//         width: 50,
-//         renderCell: (params) => (
-//           <input
-//             type='checkbox'
-//             checked={params.row.isSelected || false}
-//             onChange={(e) =>
-//               handleCheckboxChange(params.row.id, e.target.checked)
-//             }
-//             className='cursor-pointer'
-//           />
-//         ),
-//         sortable: false,
-//         filterable: false,
-//       },
-//       {
-//         field: "sno",
-//         headerName: "S.No",
-//         flex: 0.5,
-//       },
-//       {
-//         field: "name",
-//         headerName: "Name",
-//         flex: 1,
-//         renderCell: (params) => (
-//           <span
-//             onClick={() => setSelectedLead(params.row)}
-//             className='font-normal text-blue-600 cursor-pointer underline'
-//           >
-//             {params.value}
-//           </span>
-//         ),
-//       },
-
-//       {
-//         field: "phone",
-//         headerName: "Phone",
-//         flex: 1,
-//       },
-//       {
-//         field: "inhouse_division",
-//         headerName: "Division",
-//         flex: 1,
-//       },
-//       {
-//         field: "assignee",
-//         headerName: "Assignee",
-//         flex: 1,
-//         renderCell: (params) => {
-//           const creator = params.value;
-//           if (!creator)
-//             return <span className='text-gray-500'>Unassigned</span>;
-
-//           const initials = creator.name
-//             ?.split(" ")
-//             .map((n) => n[0])
-//             .join("")
-//             .toUpperCase();
-
-//           return (
-//             <div className='flex flex-row items-center  gap-2'>
-//               <div
-//                 className='w-7 h-7 rounded-full bg-indigo-500 text-white font-semibold flex items-center justify-center text-sm'
-//                 title={creator.name}
-//               >
-//                 {initials}
-//               </div>
-//               {creator.name}
-//             </div>
-//           );
-//         },
-//       },
-//       {
-//         field: "createdAt",
-//         headerName: "Created On",
-//         flex: 1,
-//         renderCell: (params) => moment(params.value).fromNow(),
-//       },
-//     ],
-//     []
-//   );
-
-//   const filteredRows = useMemo(() => {
-//     return leads?.map((lead, index) => ({
-//       id: lead.id,
-//       sno: index + 1,
-//       name: lead.name || "-",
-//       phone: lead.phone || "-",
-//       inhouse_division: lead.inhouse_division || "N/A",
-//       assignee: lead.creator || "-",
-//       createdAt: lead.createdAt || "-",
-//     }));
-//   }, [leads]);
-
-//   return (
-//     <div className='relative'>
-//       <DataTable rows={filteredRows} columns={columns} />
-
-//       {selectedLead && (
-//         <>
-//           {/* Dimmed background */}
-//           <div
-//             className='fixed inset-0 bg-black bg-opacity-30 z-40'
-//             onClick={() => setSelectedLead(null)}
-//           ></div>
-
-//           {/* Slide-in panel */}
-//           <div className='fixed top-0 right-0 h-full overflow-y-auto w-[70%] bg-white z-50 shadow-xl transition-transform duration-300 animate-slide-in'>
-//             <div className='flex justify-end p-4 border-b'>
-//               <button
-//                 onClick={() => setSelectedLead(null)}
-//                 className='text-gray-600 hover:text-red-600 text-xl'
-//               >
-//                 <X />
-//               </button>
-//             </div>
-//             <div className='p-4'>
-//               <TeamProfile lead={selectedLead} />
-//             </div>
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default CreateCampaign;
-
-/** @format */
-/** @format */
 import {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getLeadsByWorkspace} from "../redux/slice/Lead.slice";
 import DataTable from "../components/Datagrid";
 import moment from "moment/moment";
 import TeamProfile from "./TeamProfile";
-import {X, Filter, Plus, Users, Check, Search} from "lucide-react";
+import {
+  X,
+  Filter,
+  Plus,
+  Users,
+  Check,
+  Search,
+  Download,
+  Trash2,
+} from "lucide-react";
 import {Modal} from "@mui/material";
+import {createCampaign} from "../redux/slice/Campaign.slice";
+import {showSuccess} from "../utils/config";
 
 const CreateCampaign = () => {
   const dispatch = useDispatch();
   const workspaceId = localStorage.getItem("workspace_id");
   const [selectedLead, setSelectedLead] = useState(null);
   const [selectedLeads, setSelectedLeads] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const [showColumnSelector, setShowColumnSelector] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([
     "sno",
@@ -188,10 +34,15 @@ const CreateCampaign = () => {
     "inhouse_division",
     "assignee",
     "createdAt",
+    "checkbox",
   ]);
   const [showCampaignModal, setShowCampaignModal] = useState(false);
   const [campaignName, setCampaignName] = useState("");
-  const [selectedAssignee, setSelectedAssignee] = useState(null);
+  const [campaignDescription, setCampaignDescription] = useState("");
+  const [selectedAssignee, setSelectedAssignee] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
   const [showAssigneeDropdown, setShowAssigneeDropdown] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectAll, setSelectAll] = useState(false);
@@ -246,8 +97,8 @@ const CreateCampaign = () => {
       },
       {
         field: "checkbox",
-        headerName: "",
-        width: 50,
+        flex: 0.5,
+        headerName: "select",
         renderCell: (params) => (
           <input
             type='checkbox'
@@ -388,29 +239,83 @@ const CreateCampaign = () => {
     );
   };
 
-  const handleCreateCampaign = () => {
+  const handleCreateCampaign = async () => {
     const selectedLeadDetails = filteredRows.filter((row) =>
       selectedLeads.includes(row.id)
     );
 
+    console.log("workspace", workspaceId);
+
     console.log("✅ Selected Leads:", selectedLeadDetails);
     console.log("📣 Campaign Name:", campaignName);
+    console.log("📣 Campaign Description:", campaignDescription);
+
     console.log("👤 Assignee:", selectedAssignee);
+    console.log("startDate", startDate);
+    console.log("emdDate", endDate);
+    const leadIds = selectedLeadDetails?.map((lead) => lead.id);
+    const assigneeIds = selectedAssignee?.map((user) => user.user_id);
 
-    // TODO: You can dispatch an action or API call here using selectedLeadDetails
+    const data = {
+      workspace_id: workspaceId,
+      name: campaignName,
+      description: campaignDescription,
+      start_date: startDate,
+      end_date: endDate,
+      is_active: true,
+      leadIds: leadIds,
+      assigneeIds: assigneeIds,
+    };
 
-    // Reset everything
-    setShowCampaignModal(false);
-    setCampaignName("");
-    setSelectedAssignee(null);
-    setSelectedLeads([]);
-    setSelectAll(false);
+    console.log("data", data);
+
+    const response = await dispatch(createCampaign(data));
+    console.log("response", response);
+    if (response.payload.status == 1) {
+      showSuccess(response?.payload?.message);
+      setShowCampaignModal(false);
+      setCampaignName("");
+      setSelectedAssignee([]);
+      setSelectedLeads([]);
+      setSelectAll(false);
+    }
+  };
+
+  const downloadLeadsCSV = () => {
+    if (!leads || leads.length === 0) return;
+
+    // Use first item to get the keys, excluding nested objects like "creator"
+    const csvHeader = Object.keys(leads[0]).filter(
+      (key) => typeof leads[0][key] !== "object"
+    );
+
+    const csvRows = [
+      csvHeader.join(","), // Header row
+      ...leads.map((lead) =>
+        csvHeader
+          .map(
+            (field) => `"${(lead[field] ?? "").toString().replace(/"/g, '""')}"`
+          )
+          .join(",")
+      ),
+    ];
+
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], {type: "text/csv;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "leads.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
     <div className='relative p-4'>
       <div className='flex justify-between items-center mb-4'>
-        <h1 className='text-2xl font-bold'>Leads Management</h1>
+        <h1 className='text-2xl font-bold'>Campaign Management</h1>
 
         <div className='flex gap-4'>
           {/* Search input */}
@@ -492,17 +397,66 @@ const CreateCampaign = () => {
       )}
 
       {/* Select all checkbox in header */}
-      <div className='mb-2 flex items-center'>
-        <input
-          type='checkbox'
-          checked={selectAll}
-          onChange={(e) => handleSelectAll(e.target.checked)}
-          className='cursor-pointer mr-2'
-        />
-        <span className='text-sm text-gray-600'>
-          {selectAll ? "Deselect all" : "Select all"} ({filteredRows.length}{" "}
-          leads)
-        </span>
+      <div className='mb-7 flex justify-between items-center'>
+        <div>
+          <input
+            type='checkbox'
+            checked={selectAll}
+            onChange={(e) => handleSelectAll(e.target.checked)}
+            className='cursor-pointer mr-2'
+          />
+          <span className='text-md text-gray-600'>
+            {selectAll ? "Deselect all" : "Select all"} ({filteredRows.length}{" "}
+            leads)
+          </span>
+        </div>
+
+        <div className='relative inline-block text-left'>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className='inline-flex justify-center items-center px-4 py-2 rounded-md hover:bg-gray-700 hover:text-white border focus:outline-none focus:ring-2 focus:ring-purple-500'
+          >
+            More
+            <svg
+              className='-mr-1 ml-2 h-5 w-5'
+              xmlns='http://www.w3.org/2000/svg'
+              viewBox='0 0 20 20'
+              fill='currentColor'
+            >
+              <path
+                fillRule='evenodd'
+                d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'
+                clipRule='evenodd'
+              />
+            </svg>
+          </button>
+
+          {isOpen && (
+            <div className='origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10'>
+              <div className='py-1'>
+                <button
+                  onClick={downloadLeadsCSV}
+                  className='flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left'
+                >
+                  <Download className='mr-3 h-5 w-5 text-gray-400' />
+                  Download {leads?.length || 0} Leads
+                </button>
+                {/* <button className='flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left'>
+                  <Download className='mr-3 h-5 w-5 text-gray-400' />
+                  Download Action Report
+                </button>
+                <button className='flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left'>
+                  <Download className='mr-3 h-5 w-5 text-gray-400' />
+                  Download Salesform Report
+                </button> */}
+                <button className='flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 hover:text-red-800 w-full text-left'>
+                  <Trash2 className='mr-3 h-5 w-5 text-red-400' />
+                  Delete {leads?.length || 0} leads
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <DataTable rows={filteredRows} columns={filteredColumns} />
@@ -532,94 +486,163 @@ const CreateCampaign = () => {
       )}
 
       {/* Create Campaign Modal */}
-      <Modal
-        isOpen={showCampaignModal}
-        onClose={() => setShowCampaignModal(false)}
-      >
-        <div className='bg-white rounded-lg p-6 w-full max-w-md'>
-          <h2 className='text-xl font-bold mb-4'>Create New Campaign</h2>
+      {showCampaignModal && (
+        <div
+          className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm'
+          onClick={() => setShowCampaignModal(false)}
+        >
+          <div
+            className='bg-white rounded-lg p-6 w-full max-w-xl shadow-lg animate-fadeIn'
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className='text-xl font-bold mb-4'>Create New Campaign</h2>
+            <h2 className='text-sm pb-2 text-green-700 italic'>
+              ( {selectedLeads?.length || "-"} leads selected )
+            </h2>
 
-          <div className='mb-4'>
-            <label className='block text-gray-700 mb-2'>Campaign Name</label>
-            <input
-              type='text'
-              value={campaignName}
-              onChange={(e) => setCampaignName(e.target.value)}
-              className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
-              placeholder='Enter campaign name'
-            />
-          </div>
+            {/* Campaign Name */}
+            <div className='mb-4'>
+              <label className='block text-gray-700 mb-2'>Campaign Name</label>
+              <input
+                type='text'
+                value={campaignName}
+                onChange={(e) => setCampaignName(e.target.value)}
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                placeholder='Enter campaign name'
+              />
+            </div>
 
-          <div className='mb-6'>
-            <label className='block text-gray-700 mb-2'>Assign To</label>
-            <div className='relative'>
-              <button
-                onClick={() => setShowAssigneeDropdown(!showAssigneeDropdown)}
-                className='w-full flex justify-between items-center px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
-              >
-                {selectedAssignee ? (
-                  <div className='flex items-center gap-2'>
-                    <div className='w-6 h-6 rounded-full bg-indigo-500 text-white text-xs flex items-center justify-center'>
-                      {selectedAssignee.initials}
-                    </div>
-                    <span>{selectedAssignee.name}</span>
-                  </div>
-                ) : (
-                  <span className='text-gray-500'>Select an assignee</span>
-                )}
-              </button>
+            {/* Campaign Description */}
+            <div className='mb-4'>
+              <label className='block text-gray-700 mb-2'>
+                Campaign Description
+              </label>
+              <input
+                type='text'
+                value={campaignDescription}
+                onChange={(e) => setCampaignDescription(e.target.value)}
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                placeholder='Enter campaign description'
+              />
+            </div>
 
-              {showAssigneeDropdown && (
-                <div className='absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-200 max-h-60 overflow-auto'>
-                  {assignees.map((assignee) => (
-                    <div
-                      key={assignee.user_id}
-                      onClick={() => {
-                        setSelectedAssignee(assignee);
-                        setShowAssigneeDropdown(false);
-                      }}
-                      className='flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer'
-                    >
-                      <div className='w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center'>
-                        {assignee.initials}
-                      </div>
-                      <div>
-                        <div className='font-medium'>{assignee.name}</div>
-                        <div className='text-xs text-gray-500'>
-                          {assignee.email}
+            {/* Start Date */}
+            <div className='mb-4'>
+              <label className='block text-gray-700 mb-2'>Start Date</label>
+              <input
+                type='date'
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+              />
+            </div>
+
+            {/* End Date */}
+            <div className='mb-4'>
+              <label className='block text-gray-700 mb-2'>End Date</label>
+              <input
+                type='date'
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+              />
+            </div>
+
+            {/* Assign To */}
+            <div className='mb-6'>
+              <label className='block text-gray-700 mb-2'>Assign To</label>
+              <div className='relative'>
+                <button
+                  onClick={() => setShowAssigneeDropdown(!showAssigneeDropdown)}
+                  className='w-full flex flex-wrap gap-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                >
+                  {selectedAssignee?.length > 0 ? (
+                    selectedAssignee.map((user) => (
+                      <div
+                        key={user.user_id}
+                        className='flex items-center gap-1 bg-blue-100 text-sm text-blue-800 px-2 py-1 rounded'
+                      >
+                        <div className='w-5 h-5 rounded-full bg-indigo-500 text-white text-xs flex items-center justify-center'>
+                          {user.initials}
                         </div>
+                        <span>{user.name}</span>
                       </div>
-                      {selectedAssignee?.user_id === assignee.user_id && (
-                        <Check className='ml-auto text-green-500' size={16} />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+                    ))
+                  ) : (
+                    <span className='text-gray-500'>Select assignee(s)</span>
+                  )}
+                </button>
+
+                {showAssigneeDropdown && (
+                  <div className='absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md border border-gray-200 max-h-60 overflow-auto'>
+                    {assignees.map((assignee) => {
+                      const isSelected = selectedAssignee.some(
+                        (s) => s.user_id === assignee.user_id
+                      );
+
+                      const toggleSelection = () => {
+                        if (isSelected) {
+                          setSelectedAssignee(
+                            selectedAssignee.filter(
+                              (s) => s.user_id !== assignee.user_id
+                            )
+                          );
+                        } else {
+                          setSelectedAssignee([...selectedAssignee, assignee]);
+                        }
+                      };
+
+                      return (
+                        <label
+                          key={assignee.user_id}
+                          className='flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer'
+                        >
+                          <input
+                            type='checkbox'
+                            checked={isSelected}
+                            onChange={toggleSelection}
+                            className='form-checkbox accent-blue-600'
+                          />
+                          <div className='w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-sm'>
+                            {assignee.initials}
+                          </div>
+                          <div>
+                            <div className='font-medium'>{assignee.name}</div>
+                            <div className='text-xs text-gray-500'>
+                              {assignee.email}
+                            </div>
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className='flex justify-end gap-3'>
+              <button
+                onClick={() => setShowCampaignModal(false)}
+                className='px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100'
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateCampaign}
+                disabled={!campaignName || !selectedAssignee}
+                className={`px-4 py-2 rounded-md text-white ${
+                  !campaignName || !selectedAssignee
+                    ? "bg-blue-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                Create Campaign
+              </button>
             </div>
           </div>
-
-          <div className='flex justify-end gap-3'>
-            <button
-              onClick={() => setShowCampaignModal(false)}
-              className='px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100'
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleCreateCampaign}
-              disabled={!campaignName || !selectedAssignee}
-              className={`px-4 py-2 rounded-md text-white ${
-                !campaignName || !selectedAssignee
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
-              }`}
-            >
-              Create Campaign
-            </button>
-          </div>
         </div>
-      </Modal>
+      )}
     </div>
   );
 };

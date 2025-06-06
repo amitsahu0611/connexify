@@ -1,7 +1,7 @@
 /** @format */
 
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import {getUserById} from "../redux/slice/TeamSlice";
 import {
   AtSign,
@@ -38,10 +38,15 @@ import {
 } from "lucide-react";
 import {FaPhone, FaWhatsapp} from "react-icons/fa";
 import HistoryAndTask from "../components/HistoryAndTask";
+import {getLeadById} from "../redux/slice/Lead.slice";
 
-const TeamProfile = () => {
+const TeamProfile = ({lead}) => {
+  console.log("sfcsfv", lead);
+  const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const {user_id} = useParams();
+  const users_id = user_id || searchParams.get("user_Id");
+  console.log("users_id", users_id);
   const {userDetail} = useSelector((state) => state.team);
   const [userDetails, setUserDetails] = useState({});
   const [open, setOpen] = useState(false);
@@ -70,10 +75,10 @@ const TeamProfile = () => {
   console.log("userDetails", userDetails);
 
   useEffect(() => {
-    if (user_id) {
-      dispatch(getUserById(user_id));
+    if (users_id) {
+      dispatch(getLeadById(users_id));
     }
-  }, [user_id]);
+  }, [users_id]);
 
   useEffect(() => {
     if (userDetail) {
@@ -123,7 +128,7 @@ const TeamProfile = () => {
 
   return (
     <>
-      <div className={container}>
+      <div style={{backgroundColor: "#F7F7F7"}} className={container}>
         <div className='flex flex-row justify-between'>
           <div>
             <div className='font-[12px]'>Amit Sahu</div>
