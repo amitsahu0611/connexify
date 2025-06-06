@@ -9,9 +9,11 @@ import {FiEye, FiRotateCw, FiTrash2} from "react-icons/fi";
 import moment from "moment";
 import {PlusIcon} from "lucide-react";
 import DataTable from "../components/Datagrid";
+import {useNavigate} from "react-router-dom";
 
 const AllCampaigns = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {allCampaigns} = useSelector((state) => state.campaign);
   const [campaigns, setAllCampaigns] = useState([]);
   const workspace_id = localStorage.getItem("workspace_id");
@@ -331,7 +333,10 @@ const AllCampaigns = () => {
           </span>
         </div>
         <div>
-          <button className='flex flex-row items-center gap-2 border px-3 text-sm bg-[#7B68EE] hover:bg-[#5b4ab8] text-white py-2'>
+          <button
+            onClick={() => navigate("/campaign/createCampaign")}
+            className='flex flex-row items-center gap-2 border px-3 text-sm bg-[#7B68EE] hover:bg-[#5b4ab8] text-white py-2'
+          >
             <PlusIcon size={18} /> Create New
           </button>
         </div>
