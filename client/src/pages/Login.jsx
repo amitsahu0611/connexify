@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { loginApi } from "../redux/slice/Auth_slice";
+/** @format */
+
+import React, {useEffect, useRef, useState} from "react";
+import {Eye, EyeOff, Mail, Lock, User} from "lucide-react";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {loginApi} from "../redux/slice/Auth_slice";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,7 +15,7 @@ const Login = () => {
 
   const canvasRef = useRef(null);
   const particlesRef = useRef([]);
-  const mouseRef = useRef({ x: 0, y: 0 });
+  const mouseRef = useRef({x: 0, y: 0});
   const animationFrameRef = useRef();
 
   const dispatch = useDispatch();
@@ -92,7 +94,7 @@ const Login = () => {
     };
 
     const handleMouseMove = (e) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
+      mouseRef.current = {x: e.clientX, y: e.clientY};
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -115,10 +117,10 @@ const Login = () => {
     }
 
     setIsLoading(true);
-    const newData = { email, password };
+    const newData = {email, password};
 
     try {
-      await dispatch(loginApi({ newData, navigate })).unwrap();
+      await dispatch(loginApi({newData, navigate})).unwrap();
     } catch (err) {
       setError(err?.error || "Login failed. Please try again.");
     } finally {
@@ -127,80 +129,80 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
+    <div className='relative min-h-screen w-full overflow-hidden'>
+      <canvas ref={canvasRef} className='absolute top-0 left-0 w-full h-full' />
 
-      <div className="relative z-10 min-h-screen w-full flex items-center justify-center px-4">
-        <div className="w-full max-w-md">
-          <div className="bg-white/60 backdrop-blur-2xl rounded-3xl shadow-2xl overflow-hidden border border-gray-300 p-8">
-            <div className="flex flex-col items-center mb-8">
-              <div className="h-16 w-16 rounded-full bg-blue-600 flex items-center justify-center mb-4 shadow-lg animate-pulse">
-                <User className="h-8 w-8 text-white" />
+      <div className='relative z-10 min-h-screen w-full flex items-center justify-center px-4'>
+        <div className='w-full max-w-md'>
+          <div className='bg-white backdrop-blur-2xl rounded-3xl shadow-2xl overflow-hidden border border-gray-300 p-8'>
+            <div className='flex flex-col items-center mb-8'>
+              <div className='h-16 w-16 rounded-full bg-blue-600 flex items-center justify-center mb-4 shadow-lg animate-pulse'>
+                <User className='h-8 w-8 text-white' />
               </div>
-              <h1 className="text-3xl font-extrabold text-black tracking-tight">
+              <h1 className='text-3xl font-extrabold text-black tracking-tight'>
                 Welcome Back
               </h1>
-              <p className="text-gray-600 mt-1">Please sign in to continue</p>
+              <p className='text-gray-600 mt-1'>Please sign in to continue</p>
             </div>
 
             {error && (
-              <div className="text-red-600 mb-4 text-sm text-center font-medium">
+              <div className='text-red-600 mb-4 text-sm text-center font-medium'>
                 {error}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className='space-y-5'>
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                <label className='block text-sm font-semibold text-gray-700 mb-1'>
                   Email
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-blue-500" />
+                <div className='relative'>
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                    <Mail className='h-5 w-5 text-blue-500' />
                   </div>
                   <input
-                    type="email"
+                    type='email'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-2.5 rounded-xl border border-gray-300 bg-white text-black placeholder-gray-500 shadow-inner focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-                    placeholder="you@example.com"
+                    className='block w-full pl-10 pr-3 py-2.5 rounded-xl border border-gray-300 bg-white text-black placeholder-gray-500 shadow-inner focus:ring-2 focus:ring-blue-500 focus:outline-none transition'
+                    placeholder='you@example.com'
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                <label className='block text-sm font-semibold text-gray-700 mb-1'>
                   Password
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-blue-500" />
+                <div className='relative'>
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                    <Lock className='h-5 w-5 text-blue-500' />
                   </div>
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-300 bg-white text-black placeholder-gray-500 shadow-inner focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-                    placeholder="••••••••"
+                    className='block w-full pl-10 pr-10 py-2.5 rounded-xl border border-gray-300 bg-white text-black placeholder-gray-500 shadow-inner focus:ring-2 focus:ring-blue-500 focus:outline-none transition'
+                    placeholder='••••••••'
                   />
                   <button
-                    type="button"
+                    type='button'
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className='absolute inset-y-0 right-0 pr-3 flex items-center'
                   >
                     {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-blue-500 hover:text-blue-700" />
+                      <EyeOff className='h-5 w-5 text-blue-500 hover:text-blue-700' />
                     ) : (
-                      <Eye className="h-5 w-5 text-blue-500 hover:text-blue-700" />
+                      <Eye className='h-5 w-5 text-blue-500 hover:text-blue-700' />
                     )}
                   </button>
                 </div>
               </div>
 
               <button
-                type="submit"
+                type='submit'
                 disabled={isLoading}
-                className="w-full py-2.5 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 transition duration-200 shadow-lg hover:shadow-xl"
+                className='w-full py-2.5 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 transition duration-200 shadow-lg hover:shadow-xl'
               >
                 {isLoading ? "Signing in..." : "Sign in"}
               </button>

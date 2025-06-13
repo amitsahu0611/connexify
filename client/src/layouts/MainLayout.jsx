@@ -1,3 +1,4 @@
+/** @format */
 
 // import {useState} from "react";
 // import TopLoader from "../components/TopLoader";
@@ -35,18 +36,17 @@
 
 // export default MainLayout;
 
-
-import { useState } from "react";
+import {useState} from "react";
 import TopLoader from "../components/TopLoader";
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import { Outlet } from "react-router-dom";
+import {Outlet} from "react-router-dom";
 
-const MainLayout = ({ onLogout }) => {
+const MainLayout = ({onLogout, title}) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false); // Sidebar collapse state
-  const { loading } = useSelector((state) => state.workspace);
+  const {loading} = useSelector((state) => state.workspace);
 
   return (
     <div className='flex h-screen overflow-hidden bg-gray-100'>
@@ -66,7 +66,7 @@ const MainLayout = ({ onLogout }) => {
       >
         <TopLoader loading={loading} />
         <Header
-          title='Dashboard'
+          title={title}
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           onLogout={onLogout}
         />
@@ -79,4 +79,3 @@ const MainLayout = ({ onLogout }) => {
 };
 
 export default MainLayout;
-

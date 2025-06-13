@@ -1,6 +1,6 @@
 /** @format */
 
-const { DataTypes } = require("sequelize");
+const {DataTypes} = require("sequelize");
 const sequelize = require("../connection/db_connection");
 
 const Lead = sequelize.define(
@@ -56,6 +56,10 @@ const Lead = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    status: {
+      type: DataTypes.STRING,
+      defaultValue: "New Lead",
+    },
     alternate_phone: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -71,6 +75,10 @@ const Lead = sequelize.define(
     company_name: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    is_deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {

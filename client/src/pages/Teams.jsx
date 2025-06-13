@@ -133,7 +133,7 @@ export default function Teams() {
   };
 
   const handleOpenProfile = (row) => {
-    navigate(`/teams/profile/${row.id}`);
+    navigate(`/leads/profile/${row.id}`);
   };
 
   // Define columns using useMemo

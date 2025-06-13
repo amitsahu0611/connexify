@@ -15,6 +15,8 @@ const associateModels = require("./models/associateModels");
 const campaignRouter = require("./routes/campaign.route");
 const sourceRouter = require("./routes/source.route");
 const callhistoryRouter = require("./routes/callhistory.route");
+const followup = require("./routes/leadfollowup.routes");
+// const followup = require("./routes");
 
 const app = express();
 
@@ -45,6 +47,7 @@ app.use("/api/serviceCategory", categoryRouter);
 app.use("/api/source", sourceRouter);
 app.use("/api/campaign", campaignRouter);
 app.use("/api/callhistory", callhistoryRouter);
+app.use("/api/LeadFollowup", followup);
 
 app.listen(PORT, () => {
   dbConnection();

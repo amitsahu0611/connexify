@@ -24,6 +24,8 @@ import AllCampaigns from "./pages/AllCampaigns";
 import TeamProfile from "./pages/TeamProfile";
 
 import LeadManagementPage from "./pages/LeadManagementPage";
+import CampaignDashboard from "./components/CampaignDashboard";
+import LeadCampaign from "./pages/LeadCampaign";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("userData"));
@@ -44,7 +46,8 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path='teams/profile/:user_id' element={<TeamProfile />} />
+          <Route path='leads/profile/:user_id' element={<TeamProfile />} />
+          <Route path='campaign/:id' element={<CampaignDashboard />} />
           <Route path='dashboard' element={<Dashboard />} />
           <Route path='leads' element={<Add_singleLads />} />
           <Route path='leads/add' element={<BulkLeads />} />
@@ -52,6 +55,7 @@ function App() {
           <Route path='search' element={<LeadManagementPage />} />
           <Route path='campaign/createCampaign' element={<CreateCampaign />} />
           <Route path='campaign/allCampaigns' element={<AllCampaigns />} />
+          <Route path='lead/campaigns' element={<LeadCampaign />} />
 
           <Route path='/profile' element={<UserProfile />} />
 

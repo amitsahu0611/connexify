@@ -25,6 +25,19 @@ body {
   }
 }
 
+.custom-toast {
+  background: linear-gradient(to right, #667eea, #764ba2);
+  color: white;
+  border-radius: 10px;
+  padding: 12px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.custom-toast-body {
+  font-size: 14px;
+}
+
+
 overflow-y-auto {
   scroll-behavior: smooth;
 }

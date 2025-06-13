@@ -144,6 +144,7 @@ export default function Add_singleLads() {
   return (
     <>
       {loading && <TopLoader loading={loading} />}
+      <span className='pl-2'>Add Single Lead</span>
       <div className='h-screen bg-gray-100'>
         <div className=' mx-auto p-8 mt-5 bg-white'>
           <div className='flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4'>

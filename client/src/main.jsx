@@ -10,7 +10,11 @@ import {Store} from "./redux/store/store.jsx";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={Store}>
-    <ToastContainer />
+    <ToastContainer
+      toastClassName='custom-toast'
+      bodyClassName='custom-toast-body'
+      position='top-right'
+    />
     <App />
   </Provider>
 );

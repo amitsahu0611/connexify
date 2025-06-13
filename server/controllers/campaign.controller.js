@@ -177,10 +177,51 @@ const deleteCampaign = async (req, res) => {
   }
 };
 
+const getCampaignByLeadId = async (req, res) => {
+  try {
+    const {lead_id} = req.params;
+
+    if (!lead_id) {
+      return res.status(400).json({error: "lead_id is required"});
+    }
+
+    const lead = await Lead.findByPk(lead_id, {
+      include: [
+        {
+          model: Campaign,
+          through: {
+            model: LeadCampaignMap,
+            where: {
+              is_active: true,
+              is_delete: false,
+            },
+          },
+          where: {
+            is_delete: false,
+            is_active: true,
+          },
+        },
+      ],
+    });
+
+    if (!lead) {
+      return res.status(404).json({error: "Lead not found"});
+    }
+
+    return res.json(
+      createSuccess("Campaign fetched successfully", lead.Campaigns)
+    );
+  } catch (error) {
+    console.error("Error fetching campaigns by lead:", error);
+    return res.status(500).json({error: "Internal server error"});
+  }
+};
+
 module.exports = {
   createCampaign,
   getAllCampaigns,
   getCampaignById,
   updateCampaign,
   deleteCampaign,
+  getCampaignByLeadId,
 };

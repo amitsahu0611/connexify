@@ -1,6 +1,7 @@
 /** @format */
 
 const CallHistory = require("../models/CallHistory.model");
+const {createSuccess} = require("../utils/response");
 
 const createCall = async (req, res) => {
   try {
@@ -51,7 +52,7 @@ const getCallsByLead = async (req, res) => {
       include: ["campaign", "caller"],
     });
 
-    res.status(200).json({success: true, data: calls});
+    res.status(200).json(createSuccess("Call by lead is fetched", calls));
   } catch (err) {
     res.status(500).json({success: false, message: err.message});
   }

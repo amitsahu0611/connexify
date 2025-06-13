@@ -1,6 +1,6 @@
 /** @format */
 
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getLeadsByWorkspace} from "../redux/slice/Lead.slice";
 import DataTable from "../components/Datagrid";
@@ -18,10 +18,11 @@ import {
 } from "lucide-react";
 import {Modal} from "@mui/material";
 import {createCampaign} from "../redux/slice/Campaign.slice";
-import {showSuccess} from "../utils/config";
+import {showError, showSuccess} from "../utils/config";
 
 const CreateCampaign = () => {
   const dispatch = useDispatch();
+  const dropdownRef = useRef(null);
   const workspaceId = localStorage.getItem("workspace_id");
   const [selectedLead, setSelectedLead] = useState(null);
   const [selectedLeads, setSelectedLeads] = useState([]);
@@ -75,6 +76,20 @@ const CreateCampaign = () => {
       dispatch(getLeadsByWorkspace(workspaceId));
     }
   }, [workspaceId]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowAssigneeDropdown(false);
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     // Update select all state based on current selections
@@ -243,6 +258,22 @@ const CreateCampaign = () => {
     const selectedLeadDetails = filteredRows.filter((row) =>
       selectedLeads.includes(row.id)
     );
+    const leadIds = selectedLeadDetails?.map((lead) => lead.id);
+    const assigneeIds = selectedAssignee?.map((user) => user.user_id);
+
+    if (selectedLeadDetails?.length == 0) {
+      showError("Select Leads First");
+      return;
+    } else if (!campaignName) {
+      showError("Enter Campaign Name");
+      return;
+    } else if (!startDate || !endDate) {
+      showError("Enter Start or End Date");
+      return;
+    } else if (assigneeIds?.length == 0) {
+      showError("No Assignees Selected");
+      return;
+    }
 
     console.log("workspace", workspaceId);
 
@@ -253,8 +284,6 @@ const CreateCampaign = () => {
     console.log("👤 Assignee:", selectedAssignee);
     console.log("startDate", startDate);
     console.log("emdDate", endDate);
-    const leadIds = selectedLeadDetails?.map((lead) => lead.id);
-    const assigneeIds = selectedAssignee?.map((user) => user.user_id);
 
     const data = {
       workspace_id: workspaceId,
@@ -411,7 +440,7 @@ const CreateCampaign = () => {
           </span>
         </div>
 
-        <div className='relative inline-block text-left'>
+        <div className='relative inline-block text-left' ref={dropdownRef}>
           <button
             onClick={() => setIsOpen(!isOpen)}
             className='inline-flex justify-center items-center px-4 py-2 rounded-md hover:bg-gray-700 hover:text-white border focus:outline-none focus:ring-2 focus:ring-purple-500'
@@ -549,7 +578,7 @@ const CreateCampaign = () => {
             </div>
 
             {/* Assign To */}
-            <div className='mb-6'>
+            <div className='mb-6' ref={dropdownRef}>
               <label className='block text-gray-700 mb-2'>Assign To</label>
               <div className='relative'>
                 <button
@@ -630,12 +659,9 @@ const CreateCampaign = () => {
               </button>
               <button
                 onClick={handleCreateCampaign}
-                disabled={!campaignName || !selectedAssignee}
-                className={`px-4 py-2 rounded-md text-white ${
-                  !campaignName || !selectedAssignee
-                    ? "bg-blue-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700"
-                }`}
+                className={`px-4 py-2 rounded-md text-white 
+                   "bg-blue-600 hover:bg-blue-700 bg-blue-600
+                `}
               >
                 Create Campaign
               </button>
