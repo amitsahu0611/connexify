@@ -80,9 +80,9 @@ const Header = ({title, onToggleSidebar}) => {
   };
 
   return (
-    <header className='bg-[#FBFAFB] shadow-sm h-16 flex items-center px-4 sticky top-0 z-10'>
+    <header className='h-16 flex items-center px-4 sticky top-0 z-10 mt-2'>
       <button
-        className='md:hidden mr-4 text-gray-600 focus:outline-none hover:text-gray-900'
+        className='md:hidden mr-4 text-gray-100 focus:outline-none hover:text-gray-900'
         onClick={onToggleSidebar}
         aria-label='Toggle sidebar'
       >
@@ -216,7 +216,7 @@ const Header = ({title, onToggleSidebar}) => {
             className='flex items-center focus:outline-none'
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
           >
-            <div className='w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center'>
+            <div className='w-8 h-8 rounded-full bg-white flex items-center justify-center'>
               <span className='text-gray-700 font-semibold text-sm'>
                 {user?.name?.charAt(0) || "?"}
               </span>

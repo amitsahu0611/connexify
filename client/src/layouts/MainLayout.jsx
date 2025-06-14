@@ -49,7 +49,7 @@ const MainLayout = ({onLogout, title}) => {
   const {loading} = useSelector((state) => state.workspace);
 
   return (
-    <div className='flex h-screen overflow-hidden bg-gray-100'>
+    <div className='flex h-screen overflow-hidden bg-gray-300'>
       {/* Sidebar */}
       <Sidebar
         isOpen={sidebarOpen}
@@ -69,6 +69,7 @@ const MainLayout = ({onLogout, title}) => {
           title={title}
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           onLogout={onLogout}
+          
         />
         <main className='flex-1 overflow-auto p-4'>
           <Outlet />
