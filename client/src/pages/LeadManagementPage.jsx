@@ -115,7 +115,7 @@ const LeadManagementPage = () => {
   }
 
   return (
-    <div className='flex flex-col lg:flex-row h-screen bg-gray-50'>
+    <div className='flex flex-col lg:flex-row container mx-auto p-4 gap-4'>
       <LeadSearchComponent
         leads={filteredLeads}
         searchValue={searchValue}
@@ -134,7 +134,7 @@ const LeadManagementPage = () => {
         formatDate={formatDate}
         onUpdateLead={handleUpdateLead}
       /> */}
-      <div className='w-full lg:w-3/5 bg-white overflow-y-auto'>
+      <div className='w-full lg:w-3/5  overflow-y-auto'>
         <div className='p-6'>
           <TeamProfile />
         </div>

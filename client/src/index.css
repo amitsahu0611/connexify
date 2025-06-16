@@ -2,10 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-
 html,
 body {
-  font-family: 'Recursive', monospace;
   font-size: 16px;
   line-height: 1.6;
   background: #121212;
@@ -30,13 +28,12 @@ body {
   color: white;
   border-radius: 10px;
   padding: 12px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .custom-toast-body {
   font-size: 14px;
 }
-
 
 overflow-y-auto {
   scroll-behavior: smooth;
